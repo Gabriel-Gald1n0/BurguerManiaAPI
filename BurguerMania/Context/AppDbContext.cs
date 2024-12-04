@@ -67,7 +67,7 @@ namespace BurguerManiaAPI.Context
                 .HasOne(p => p.Category)
                 .WithMany(c => c.Products)
                 .HasForeignKey(p => p.CategoryId)
-                .OnDelete(DeleteBehavior.Restrict);
+                .OnDelete(DeleteBehavior.Cascade);
 
             // Configuração para a tabela Orders
             modelBuilder.Entity<OrdersModel>()
@@ -97,7 +97,7 @@ namespace BurguerManiaAPI.Context
                 .HasOne(op => op.Product)
                 .WithMany()
                 .HasForeignKey(op => op.ProductId)
-                .OnDelete(DeleteBehavior.Restrict);
+                .OnDelete(DeleteBehavior.Cascade);
 
             modelBuilder.Entity<OrderProductsModel>()
                 .HasOne(op => op.Order)
@@ -110,7 +110,7 @@ namespace BurguerManiaAPI.Context
                 .HasOne(uo => uo.User)
                 .WithMany()
                 .HasForeignKey(uo => uo.UserId)
-                .OnDelete(DeleteBehavior.Restrict);
+                .OnDelete(DeleteBehavior.Cascade);
 
             modelBuilder.Entity<UserOrdersModel>()
                 .HasOne(uo => uo.Order)

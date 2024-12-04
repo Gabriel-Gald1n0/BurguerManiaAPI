@@ -28,11 +28,11 @@ namespace BurguerMania.Controllers
         public async Task<ActionResult<ResponseModel<List<CategoryResponse>>>> GetCategorys()
         {
             var categorys = await _categoryInterface.GetCategories();
-            if (!categorys.Status && categorys.StatusCode == 404)
+            if (!categorys.Status)
             {
-                return NotFound(new { status = 404, erros = categorys.Mensagem });
+               return StatusCode(categorys.StatusCode, new { status = categorys.StatusCode, erros = categorys.Mensagem });
             }
-
+            
             return Ok(categorys);
         }
 
@@ -41,9 +41,9 @@ namespace BurguerMania.Controllers
         public async Task<ActionResult<ResponseModel<CategoryResponse>>> GetCategory(int id)
         {
             var category = await _categoryInterface.GetCategory(id);
-            if (!category.Status && category.StatusCode == 404)
+            if (!category.Status)
             {
-                return NotFound(new { status = 404, erros = category.Mensagem });
+               return StatusCode(category.StatusCode, new { status = category.StatusCode, erros = category.Mensagem });
             }
 
             return Ok(category);
@@ -54,12 +54,19 @@ namespace BurguerMania.Controllers
         [HttpPut("PutCategorys/{id}")]
         public async Task<ActionResult<ResponseModel<CategoryResponse>>> PutCategorys(int id, CategoryRequest categoryRequest)
         {
-            var category = await _categoryInterface.PutCategories(id, categoryRequest);
-            if (!category.Status && category.StatusCode == 404)
+            if (!ModelState.IsValid)
             {
-                return NotFound(new { status = 404, erros = category.Mensagem });
+                // Caso o modelo não seja válido, retorna uma resposta com as mensagens de erro
+                var errorMessages = ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage).ToList();
+                return BadRequest(new { erros = errorMessages });
             }
-
+            
+            var category = await _categoryInterface.PutCategories(id, categoryRequest);
+            
+            if (!category.Status)
+            {
+               return StatusCode(category.StatusCode, new { status = category.StatusCode, erros = category.Mensagem });
+            }
             return Ok(category);
         }
 
@@ -67,12 +74,19 @@ namespace BurguerMania.Controllers
         [HttpPost("PostCategorys")]
         public async Task<ActionResult<ResponseModel<CategoryResponse>>> PostCategorys(CategoryRequest categoryRequest)
         {
-            var category = await _categoryInterface.PostCategories(categoryRequest);
-            if (!category.Status && category.StatusCode == 404)
+            if (!ModelState.IsValid)
             {
-                return NotFound(new { status = 404, erros = category.Mensagem });
+                // Caso o modelo não seja válido, retorna uma resposta com as mensagens de erro
+                var errorMessages = ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage).ToList();
+                return BadRequest(new { erros = errorMessages });
             }
-
+            
+            var category = await _categoryInterface.PostCategories(categoryRequest);
+            
+            if (!category.Status)
+            {
+               return StatusCode(category.StatusCode, new { status = category.StatusCode, erros = category.Mensagem });
+            }
             return Ok(category);
         }
 
@@ -81,9 +95,9 @@ namespace BurguerMania.Controllers
         public async Task<ActionResult<ResponseModel<CategoryResponse>>> DeleteCategory(int id)
         {
             var category = await _categoryInterface.DeleteCategories(id);
-            if (!category.Status && category.StatusCode == 404)
+            if (!category.Status)
             {
-                return NotFound(new { status = 404, erros = category.Mensagem });
+               return StatusCode(category.StatusCode, new { status = category.StatusCode, erros = category.Mensagem });
             }
 
             return Ok(category);

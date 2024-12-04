@@ -227,6 +227,9 @@ namespace BurguerManiaAPI.Services.Product
                     return resposta;
                 }
 
+                // Remover registros relacionados em OrderProducts
+                var orderProducts = _context.OrdersProducts.Where(op => op.ProductId == id);
+                _context.OrdersProducts.RemoveRange(orderProducts);
 
                 _context.Products.Remove(produto);
                 await _context.SaveChangesAsync();

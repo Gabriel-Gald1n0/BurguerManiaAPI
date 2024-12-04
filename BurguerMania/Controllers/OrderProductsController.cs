@@ -28,9 +28,9 @@ namespace BurguerMania.Controllers
         public async Task<ActionResult<ResponseModel<List<OrderProductResponse>>>> GetOrderProducts()
         {
             var orderProducts = await _orderProductInterface.GetOrderProducts();
-            if (!orderProducts.Status && orderProducts.StatusCode == 404)
+            if (!orderProducts.Status)
             {
-                return NotFound(new { status = 404, erros = orderProducts.Mensagem });
+                 return StatusCode(orderProducts.StatusCode, new { status = orderProducts.StatusCode, erros = orderProducts.Mensagem });
             }
 
             return Ok(orderProducts);
@@ -41,9 +41,9 @@ namespace BurguerMania.Controllers
         public async Task<ActionResult<ResponseModel<OrderProductResponse>>> GetOrderProduct(int id)
         {
             var orderProduct = await _orderProductInterface.GetOrderProduct(id);
-            if (!orderProduct.Status && orderProduct.StatusCode == 404)
+            if (!orderProduct.Status)
             {
-                return NotFound(new { status = 404, erros = orderProduct.Mensagem });
+                 return StatusCode(orderProduct.StatusCode, new { status = orderProduct.StatusCode, erros = orderProduct.Mensagem });
             }
 
             return Ok(orderProduct);
@@ -54,12 +54,19 @@ namespace BurguerMania.Controllers
         [HttpPut("PutOrderProducts/{id}")]
         public async Task<ActionResult<ResponseModel<OrderProductResponse>>> PutOrderProducts(int id, OrderProductRequest orderProductRequest)
         {
-            var orderProduct = await _orderProductInterface.PutOrderProducts(id, orderProductRequest);
-            if (!orderProduct.Status && orderProduct.StatusCode == 404)
+            if (!ModelState.IsValid)
             {
-                return NotFound(new { status = 404, erros = orderProduct.Mensagem });
+                // Caso o modelo não seja válido, retorna uma resposta com as mensagens de erro
+                var errorMessages = ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage).ToList();
+                return BadRequest(new { erros = errorMessages });
             }
-
+            
+            var orderProduct = await _orderProductInterface.PutOrderProducts(id, orderProductRequest);
+            
+            if (!orderProduct.Status)
+            {
+                return StatusCode(orderProduct.StatusCode, new { status = orderProduct.StatusCode, erros = orderProduct.Mensagem });
+            }
             return Ok(orderProduct);
         }
 
@@ -67,10 +74,18 @@ namespace BurguerMania.Controllers
         [HttpPost("PostOrderProducts")]
         public async Task<ActionResult<ResponseModel<OrderProductResponse>>> PostOrderProducts(OrderProductRequest orderProductRequest)
         {
-            var orderProduct = await _orderProductInterface.PostOrderProducts(orderProductRequest);
-            if (!orderProduct.Status && orderProduct.StatusCode == 404)
+            if (!ModelState.IsValid)
             {
-                return NotFound(new { status = 404, erros = orderProduct.Mensagem });
+                // Caso o modelo não seja válido, retorna uma resposta com as mensagens de erro
+                var errorMessages = ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage).ToList();
+                return BadRequest(new { erros = errorMessages });
+            }
+            
+            var orderProduct = await _orderProductInterface.PostOrderProducts(orderProductRequest);
+            
+            if (!orderProduct.Status)
+            {
+                return StatusCode(orderProduct.StatusCode, new { status = orderProduct.StatusCode, erros = orderProduct.Mensagem });
             }
 
             return Ok(orderProduct);
@@ -81,9 +96,9 @@ namespace BurguerMania.Controllers
         public async Task<ActionResult<ResponseModel<OrderProductResponse>>> DeleteOrderProducts(int id)
         {
             var orderProduct = await _orderProductInterface.DeleteOrderProducts(id);
-            if (!orderProduct.Status && orderProduct.StatusCode == 404)
+            if (!orderProduct.Status)
             {
-                return NotFound(new { status = 404, erros = orderProduct.Mensagem });
+                return StatusCode(orderProduct.StatusCode, new { status = orderProduct.StatusCode, erros = orderProduct.Mensagem });
             }
 
             return Ok(orderProduct);

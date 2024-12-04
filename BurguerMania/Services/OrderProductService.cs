@@ -24,14 +24,19 @@ namespace BurguerManiaAPI.Services.OrderProduct
             var resposta = new ResponseModel<List<OrderProductResponse>>();
             try
             {
-                var orderProducts = await _context.OrdersProducts
-                    .Select(op => new OrderProductResponse
-                    {
-                        Id = op.Id,
-                        OrderId = op.OrderId,
-                        ProductId = op.ProductId
-                    })
-                    .ToListAsync();
+                var orderProducts = await (from op in _context.OrdersProducts
+                             join p in _context.Products on op.ProductId equals p.Id
+                             join o in _context.Orders on op.OrderId equals o.Id
+                             join s in _context.Status on o.StatusId equals s.Id
+                             select new OrderProductResponse
+                             {
+                                 Id = op.Id,
+                                 ProductId = p.Id,
+                                 ProductName = p.Name,
+                                 OrderId = o.Id,
+                                 Status = s.Name,
+                                 Value = o.Value
+                             }).ToListAsync();
 
                 if (orderProducts.Count == 0)
                 {
@@ -60,15 +65,21 @@ namespace BurguerManiaAPI.Services.OrderProduct
             var resposta = new ResponseModel<OrderProductResponse>();
             try
             {
-                var orderProduct = await _context.OrdersProducts
-                    .Where(op => op.OrderId == id)
-                    .Select(op => new OrderProductResponse
-                    {
-                        Id = op.Id,
-                        OrderId = op.OrderId,
-                        ProductId = op.ProductId
-                    })
-                    .FirstOrDefaultAsync();
+
+                var orderProduct = await (from op in _context.OrdersProducts
+                             join p in _context.Products on op.ProductId equals p.Id
+                             join o in _context.Orders on op.OrderId equals o.Id
+                             join s in _context.Status on o.StatusId equals s.Id
+                             where op.Id == id
+                             select new OrderProductResponse
+                             {
+                                 Id = op.Id,
+                                 ProductId = p.Id,
+                                 ProductName = p.Name,
+                                 OrderId = o.Id,
+                                 Status = s.Name,
+                                 Value = o.Value
+                             }).FirstOrDefaultAsync(); 
 
                 if (orderProduct == null)
                 {
@@ -106,13 +117,22 @@ namespace BurguerManiaAPI.Services.OrderProduct
                 _context.OrdersProducts.Add(orderProduct);
                 await _context.SaveChangesAsync();
 
-                resposta.Dados = new OrderProductResponse
-                {
-                    Id = orderProduct.Id,
-                    OrderId = orderProduct.OrderId,
-                    ProductId = orderProduct.ProductId
-                };
+                var OrderProductResponse = await (from op in _context.OrdersProducts
+                             join p in _context.Products on op.ProductId equals p.Id
+                             join o in _context.Orders on op.OrderId equals o.Id
+                             join s in _context.Status on o.StatusId equals s.Id
+                             where op.Id == orderProduct.Id
+                             select new OrderProductResponse
+                             {
+                                 Id = op.Id,
+                                 ProductId = p.Id,
+                                 ProductName = p.Name,
+                                 OrderId = o.Id,
+                                 Status = s.Name,
+                                 Value = o.Value
+                             }).FirstOrDefaultAsync(); 
 
+                resposta.Dados = OrderProductResponse;
                 resposta.Mensagem = "Produto de pedido cadastrado com sucesso!";
                 resposta.StatusCode = 201; 
                 return resposta;
@@ -147,12 +167,22 @@ namespace BurguerManiaAPI.Services.OrderProduct
 
                 await _context.SaveChangesAsync();
 
-                resposta.Dados = new OrderProductResponse
-                {
-                    OrderId = orderProduct.OrderId,
-                    ProductId = orderProduct.ProductId
-                };
+                var OrderProductResponse = await (from op in _context.OrdersProducts
+                             join p in _context.Products on op.ProductId equals p.Id
+                             join o in _context.Orders on op.OrderId equals o.Id
+                             join s in _context.Status on o.StatusId equals s.Id
+                             where op.Id == orderProduct.Id
+                             select new OrderProductResponse
+                             {
+                                 Id = op.Id,
+                                 ProductId = p.Id,
+                                 ProductName = p.Name,
+                                 OrderId = o.Id,
+                                 Status = s.Name,
+                                 Value = o.Value
+                             }).FirstOrDefaultAsync(); 
 
+                resposta.Dados = OrderProductResponse;
                 resposta.Mensagem = "Produto de pedido atualizado com sucesso!";
                 resposta.StatusCode = 200;
                 return resposta;
@@ -182,16 +212,25 @@ namespace BurguerManiaAPI.Services.OrderProduct
                     return resposta;
                 }
 
+                var OrderProductResponse = await (from op in _context.OrdersProducts
+                             join p in _context.Products on op.ProductId equals p.Id
+                             join o in _context.Orders on op.OrderId equals o.Id
+                             join s in _context.Status on o.StatusId equals s.Id
+                             where op.Id == orderProduct.Id
+                             select new OrderProductResponse
+                             {
+                                 Id = op.Id,
+                                 ProductId = p.Id,
+                                 ProductName = p.Name,
+                                 OrderId = o.Id,
+                                 Status = s.Name,
+                                 Value = o.Value
+                             }).FirstOrDefaultAsync(); 
+
                 _context.OrdersProducts.Remove(orderProduct);
                 await _context.SaveChangesAsync();
 
-                resposta.Dados = new OrderProductResponse
-                {
-                    Id = orderProduct.Id,
-                    OrderId = orderProduct.OrderId,
-                    ProductId = orderProduct.ProductId
-                };
-
+                resposta.Dados = OrderProductResponse;
                 resposta.Mensagem = "Produto de pedido deletado com sucesso!";
                 resposta.StatusCode = 200;
                 return resposta;

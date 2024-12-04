@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost:3307
--- Tempo de geração: 04/12/2024 às 06:29
+-- Tempo de geração: 05/12/2024 às 00:37
 -- Versão do servidor: 10.4.28-MariaDB
 -- Versão do PHP: 8.0.28
 
@@ -62,7 +62,10 @@ CREATE TABLE `orders` (
 --
 
 INSERT INTO `orders` (`Id`, `StatusId`, `Value`) VALUES
-(1, 1, 9.99);
+(1, 1, 9.99),
+(4, 3, 110.01),
+(5, 2, 120.01),
+(6, 1, 10.41);
 
 -- --------------------------------------------------------
 
@@ -81,7 +84,8 @@ CREATE TABLE `ordersproducts` (
 --
 
 INSERT INTO `ordersproducts` (`Id`, `ProductId`, `OrderId`) VALUES
-(1, 1, 1);
+(1, 1, 1),
+(3, 20, 4);
 
 -- --------------------------------------------------------
 
@@ -164,7 +168,8 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`Id`, `Name`, `Email`, `Password`) VALUES
-(1, 'Galds', 'user@example.com', 'galds12');
+(1, 'Galds', 'user@example.com', 'galds12'),
+(2, 'galdino', 'user@example.com', 'galdinin');
 
 -- --------------------------------------------------------
 
@@ -183,7 +188,7 @@ CREATE TABLE `usersorders` (
 --
 
 INSERT INTO `usersorders` (`Id`, `UserId`, `OrderId`) VALUES
-(1, 1, 1);
+(1, 2, 1);
 
 -- --------------------------------------------------------
 
@@ -205,7 +210,8 @@ INSERT INTO `__efmigrationshistory` (`MigrationId`, `ProductVersion`) VALUES
 ('20241203233652_SecondMigrate', '8.0.10'),
 ('20241203235029_removeDescription', '8.0.10'),
 ('20241203235625_setPrice', '8.0.10'),
-('20241204041728_configProduct', '8.0.10');
+('20241204041728_configProduct', '8.0.10'),
+('20241204205836_AddCascadeDeleteToOrdersProductsAndUsersOrders', '8.0.10');
 
 --
 -- Índices para tabelas despejadas
@@ -274,25 +280,25 @@ ALTER TABLE `__efmigrationshistory`
 -- AUTO_INCREMENT de tabela `categories`
 --
 ALTER TABLE `categories`
-  MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- AUTO_INCREMENT de tabela `orders`
 --
 ALTER TABLE `orders`
-  MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 
 --
 -- AUTO_INCREMENT de tabela `ordersproducts`
 --
 ALTER TABLE `ordersproducts`
-  MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT de tabela `products`
 --
 ALTER TABLE `products`
-  MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=23;
+  MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=32;
 
 --
 -- AUTO_INCREMENT de tabela `status`
@@ -304,13 +310,13 @@ ALTER TABLE `status`
 -- AUTO_INCREMENT de tabela `users`
 --
 ALTER TABLE `users`
-  MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT de tabela `usersorders`
 --
 ALTER TABLE `usersorders`
-  MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- Restrições para tabelas despejadas
@@ -327,20 +333,20 @@ ALTER TABLE `orders`
 --
 ALTER TABLE `ordersproducts`
   ADD CONSTRAINT `FK_OrdersProducts_Orders_OrderId` FOREIGN KEY (`OrderId`) REFERENCES `orders` (`Id`) ON DELETE CASCADE,
-  ADD CONSTRAINT `FK_OrdersProducts_Products_ProductId` FOREIGN KEY (`ProductId`) REFERENCES `products` (`Id`);
+  ADD CONSTRAINT `FK_OrdersProducts_Products_ProductId` FOREIGN KEY (`ProductId`) REFERENCES `products` (`Id`) ON DELETE CASCADE;
 
 --
 -- Restrições para tabelas `products`
 --
 ALTER TABLE `products`
-  ADD CONSTRAINT `FK_Products_Categories_CategoryId` FOREIGN KEY (`CategoryId`) REFERENCES `categories` (`Id`);
+  ADD CONSTRAINT `FK_Products_Categories_CategoryId` FOREIGN KEY (`CategoryId`) REFERENCES `categories` (`Id`) ON DELETE CASCADE;
 
 --
 -- Restrições para tabelas `usersorders`
 --
 ALTER TABLE `usersorders`
   ADD CONSTRAINT `FK_UsersOrders_Orders_OrderId` FOREIGN KEY (`OrderId`) REFERENCES `orders` (`Id`) ON DELETE CASCADE,
-  ADD CONSTRAINT `FK_UsersOrders_Users_UserId` FOREIGN KEY (`UserId`) REFERENCES `users` (`Id`);
+  ADD CONSTRAINT `FK_UsersOrders_Users_UserId` FOREIGN KEY (`UserId`) REFERENCES `users` (`Id`) ON DELETE CASCADE;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

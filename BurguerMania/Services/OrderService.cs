@@ -108,10 +108,16 @@ namespace BurguerManiaAPI.Services.Order
                 _context.Orders.Add(pedido);
                 await _context.SaveChangesAsync();
 
+                var pedidoComStatus = await _context.Orders
+                    .Include(o => o.Status)
+                    .FirstOrDefaultAsync(o => o.Id == pedido.Id);
+
                 var pedidoResponse = new OrderResponse
                 {
-                    Status = pedido.Status != null ? pedido.Status.Name : "Status não encontrado",  
-                    Value = pedido.Value
+                    Id = pedido.Id,
+                    StatusId = pedido.StatusId,
+                    Status = pedidoComStatus?.Status?.Name ?? "Status não encontrado",
+                    Value = pedidoComStatus?.Value ?? 0
                 };
 
                 resposta.Dados = pedidoResponse;
@@ -133,7 +139,10 @@ namespace BurguerManiaAPI.Services.Order
             var resposta = new ResponseModel<OrderResponse>();
             try
             {
-                var pedido = await _context.Orders.FirstOrDefaultAsync(o => o.Id == id);
+                var pedido = await _context.Orders
+                    .Include(o => o.Status) 
+                    .FirstOrDefaultAsync(o => o.Id == id);
+
                 if (pedido == null)
                 {
                     resposta.Mensagem = "Pedido não encontrado!";
@@ -146,10 +155,15 @@ namespace BurguerManiaAPI.Services.Order
                 pedido.Value = orderRequest.Value;
 
                 await _context.SaveChangesAsync();
-
+                
+                // Atualiza status do pedido
+                await _context.Entry(pedido).Reference(o => o.Status).LoadAsync();
+                
                 var pedidoResponse = new OrderResponse
                 {
-                    Status = pedido.Status != null ? pedido.Status.Name : "Status não encontrado",  
+                    Id = pedido.Id,
+                    StatusId = pedido.StatusId,
+                    Status = pedido.Status?.Name ?? "Status não encontrado",  
                     Value = pedido.Value
                 };
 
@@ -172,7 +186,9 @@ namespace BurguerManiaAPI.Services.Order
             var resposta = new ResponseModel<OrderResponse>();
             try
             {
-                var pedido = await _context.Orders.FirstOrDefaultAsync(o => o.Id == id);
+                var pedido = await _context.Orders
+                    .Include(o => o.Status)
+                    .FirstOrDefaultAsync(o => o.Id == id);
 
                 if (pedido == null)
                 {
@@ -182,13 +198,22 @@ namespace BurguerManiaAPI.Services.Order
                     return resposta;
                 }
 
+                // Remover registros relacionados em UserOrders
+                var userOrders = _context.UsersOrders.Where(uo => uo.OrderId == id);
+                _context.UsersOrders.RemoveRange(userOrders);
+
+                // Remover registros relacionados em OrderProducts
+                var orderProducts = _context.OrdersProducts.Where(op => op.OrderId == id);
+                _context.OrdersProducts.RemoveRange(orderProducts);
+
                 _context.Orders.Remove(pedido);
                 await _context.SaveChangesAsync();
 
                 var pedidoResponse = new OrderResponse
                 {
                     Id = pedido.Id,
-                    Status = pedido.Status != null ? pedido.Status.Name : "Status não encontrado",  
+                    StatusId = pedido.StatusId,
+                    Status = pedido.Status?.Name ?? "Status não encontrado",  
                     Value = pedido.Value
                 };
 

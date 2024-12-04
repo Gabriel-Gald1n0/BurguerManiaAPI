@@ -123,7 +123,6 @@ namespace BurguerManiaAPI.Services.User
 
                 await _context.SaveChangesAsync();
 
-                // Criando o UserResponse com as informações do cliente atualizado
                 var clienteResponse = new UserResponse
                 {
                     Name = cliente.Name,
@@ -160,11 +159,14 @@ namespace BurguerManiaAPI.Services.User
                     return resposta;
                 }
 
-                
+                // Excluindo pedidos ou outras dependências associadas ao cliente
+                var pedidos = _context.UsersOrders.Where(o => o.UserId == id);
+                _context.UsersOrders.RemoveRange(pedidos);
+
+                // Agora exclui o cliente
                 _context.Users.Remove(cliente);
                 await _context.SaveChangesAsync();
 
-                
                 var clienteResponse = new UserResponse
                 {
                     Name = cliente.Name,
@@ -178,7 +180,7 @@ namespace BurguerManiaAPI.Services.User
             }
             catch (Exception ex)
             {
-                resposta.Mensagem = ex.Message;
+                resposta.Mensagem = ex.InnerException?.Message ?? ex.Message;
                 resposta.Status = false;
                 resposta.StatusCode = 500;
                 return resposta;

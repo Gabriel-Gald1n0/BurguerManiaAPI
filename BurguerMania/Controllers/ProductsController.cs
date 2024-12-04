@@ -29,9 +29,9 @@ namespace BurguerMania.Controllers
         public async Task<ActionResult<ResponseModel<List<ProductResponse>>>> GetProducts()
         {
             var products = await _productInterface.GetProducts();
-            if (!products.Status && products.StatusCode == 404)
+            if (!products.Status)
             {
-                return NotFound(new { status = 404, erros = products.Mensagem });
+                return StatusCode(products.StatusCode, new { status = products.StatusCode, erros = products.Mensagem });
             }
 
             return Ok(products);
@@ -55,10 +55,18 @@ namespace BurguerMania.Controllers
         [HttpPut("PutProducts/{id}")]
         public async Task<ActionResult<ResponseModel<ProductResponse>>> PutProducts(int id, ProductRequest productRequest)
         {
-            var product = await _productInterface.PutProducts(id, productRequest);
-            if (!product.Status && product.StatusCode == 404)
+            if (!ModelState.IsValid)
             {
-                return NotFound(new { status = 404, erros = product.Mensagem });
+                // Caso o modelo não seja válido, retorna uma resposta com as mensagens de erro
+                var errorMessages = ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage).ToList();
+                return BadRequest(new { erros = errorMessages });
+            }
+
+            var product = await _productInterface.PutProducts(id, productRequest);
+            
+            if (!product.Status)
+            {
+                return StatusCode(product.StatusCode, new { status = product.StatusCode, erros = product.Mensagem });
             }
 
             return Ok(product);
@@ -68,12 +76,18 @@ namespace BurguerMania.Controllers
         [HttpPost("PostProducts")]
         public async Task<ActionResult<ResponseModel<ProductResponse>>> PostProducts(ProductRequest productRequest)
         {
-            var product = await _productInterface.PostProducts(productRequest);
-            if (!product.Status && product.StatusCode == 404)
+            if (!ModelState.IsValid)
             {
-                return NotFound(new { status = 404, erros = product.Mensagem });
+                // Caso o modelo não seja válido, retorna uma resposta com as mensagens de erro
+                var errorMessages = ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage).ToList();
+                return BadRequest(new { erros = errorMessages });
             }
-
+            
+            var product = await _productInterface.PostProducts(productRequest);
+            if (!product.Status)
+            {
+                return StatusCode(product.StatusCode, new { status = product.StatusCode, erros = product.Mensagem });
+            }
             return Ok(product);
         }
 
@@ -82,9 +96,9 @@ namespace BurguerMania.Controllers
         public async Task<ActionResult<ResponseModel<ProductResponse>>> DeleteProducts(int id)
         {
             var product = await _productInterface.DeleteProducts(id);
-            if (!product.Status && product.StatusCode == 404)
+            if (!product.Status)
             {
-                return NotFound(new { status = 404, erros = product.Mensagem });
+                return StatusCode(product.StatusCode, new { status = product.StatusCode, erros = product.Mensagem });
             }
 
             return Ok(product);

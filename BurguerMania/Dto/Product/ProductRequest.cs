@@ -16,11 +16,14 @@ namespace BurguerManiaAPI.Dto.Product
         public decimal Price { get; set; }  = 10.00m; 
 
         [Required(ErrorMessage = "A Categoria é obrigatória.")]
+        [Range(1, int.MaxValue, ErrorMessage = "A Categoria deve ser maior que 0.")]
         public int CategoryId { get; set; }
 
+        [Required(ErrorMessage = "A Descrição é obrigatória.")]
         [StringLength(150, MinimumLength = 6,ErrorMessage = "A Base Description pode ter no máximo 150 caracteres e no minimo 6.")]
         public string? Description { get; set; }
 
+        [Required(ErrorMessage = "O Texto sobre é obrigatória.")]
         [StringLength(1000, MinimumLength = 6,ErrorMessage = "A FullDescription pode ter no máximo 1000 caracteres e no minimo 6.")]
         public string? FullDescription { get; set; }
         

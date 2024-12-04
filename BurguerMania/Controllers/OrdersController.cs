@@ -28,9 +28,9 @@ namespace BurguerMania.Controllers
         public async Task<ActionResult<ResponseModel<List<OrderResponse>>>> GetOrders()
         {
             var orders = await _orderInterface.GetOrders();
-            if (!orders.Status && orders.StatusCode == 404)
+            if (!orders.Status)
             {
-                return NotFound(new { status = 404, erros = orders.Mensagem });
+                return StatusCode(orders.StatusCode, new { status = orders.StatusCode, erros = orders.Mensagem });
             }
 
             return Ok(orders);
@@ -41,9 +41,9 @@ namespace BurguerMania.Controllers
         public async Task<ActionResult<ResponseModel<OrderResponse>>> GetOrder(int id)
         {
             var order = await _orderInterface.GetOrder(id);
-            if (!order.Status && order.StatusCode == 404)
+            if (!order.Status)
             {
-                return NotFound(new { status = 404, erros = order.Mensagem });
+                return StatusCode(order.StatusCode, new { status = order.StatusCode, erros = order.Mensagem });
             }
 
             return Ok(order);
@@ -54,12 +54,19 @@ namespace BurguerMania.Controllers
         [HttpPut("PutOrders/{id}")]
         public async Task<ActionResult<ResponseModel<OrderResponse>>> PutOrders(int id, OrderRequest orderRequest)
         {
-            var order = await _orderInterface.PutOrders(id, orderRequest);
-            if (!order.Status && order.StatusCode == 404)
+            if (!ModelState.IsValid)
             {
-                return NotFound(new { status = 404, erros = order.Mensagem });
+                // Caso o modelo não seja válido, retorna uma resposta com as mensagens de erro
+                var errorMessages = ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage).ToList();
+                return BadRequest(new { erros = errorMessages });
             }
-
+            
+            var order = await _orderInterface.PutOrders(id, orderRequest);
+            
+            if (!order.Status)
+            {
+                return StatusCode(order.StatusCode, new { status = order.StatusCode, erros = order.Mensagem });
+            }
             return Ok(order);
         }
 
@@ -67,12 +74,19 @@ namespace BurguerMania.Controllers
         [HttpPost("PostOrders")]
         public async Task<ActionResult<ResponseModel<OrderResponse>>> PostOrders(OrderRequest orderRequest)
         {
-            var order = await _orderInterface.PostOrders(orderRequest);
-            if (!order.Status && order.StatusCode == 404)
+            if (!ModelState.IsValid)
             {
-                return NotFound(new { status = 404, erros = order.Mensagem });
+                // Caso o modelo não seja válido, retorna uma resposta com as mensagens de erro
+                var errorMessages = ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage).ToList();
+                return BadRequest(new { erros = errorMessages });
             }
 
+            var order = await _orderInterface.PostOrders(orderRequest);
+            
+            if (!order.Status)
+            {
+                return StatusCode(order.StatusCode, new { status = order.StatusCode, erros = order.Mensagem });
+            }
             return Ok(order);
         }
 
@@ -81,9 +95,9 @@ namespace BurguerMania.Controllers
         public async Task<ActionResult<ResponseModel<OrderResponse>>> DeleteOrders(int id)
         {
             var order = await _orderInterface.DeleteOrders(id);
-            if (!order.Status && order.StatusCode == 404)
+            if (!order.Status)
             {
-                return NotFound(new { status = 404, erros = order.Mensagem });
+                return StatusCode(order.StatusCode, new { status = order.StatusCode, erros = order.Mensagem });
             }
 
             return Ok(order);

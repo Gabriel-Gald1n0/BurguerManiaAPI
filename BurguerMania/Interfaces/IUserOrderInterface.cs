@@ -5,9 +5,9 @@ namespace BurguerManiaAPI.Interfaces.UserOrder
 {
     public interface IUserOrderInterface
     {
-        Task<ResponseModel<List<UserOrdersModel>>> GetUserOrders();
-        Task<ResponseModel<UserOrdersModel>> GetUserOrder(int id);
-        Task<ResponseModel<UserOrdersModel>> PostUserOrders(UserOrderRequest UserOrderRequest);
+        Task<ResponseModel<List<UserOrderResponse>>> GetUserOrders();
+        Task<ResponseModel<UserOrderResponse>> GetUserOrder(int id);
+        Task<ResponseModel<UserOrderResponse>> PostUserOrders(UserOrderRequest UserOrderRequest);
         Task<ResponseModel<UserOrderResponse>> PutUserOrders(int id, UserOrderRequest UserOrderRequest);
         Task<ResponseModel<UserOrderResponse>> DeleteUserOrders(int id);
     }

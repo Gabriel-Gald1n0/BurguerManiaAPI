@@ -29,9 +29,9 @@ namespace BurguerMania.Controllers
         public async Task<ActionResult<ResponseModel<List<UsersModel>>>> GetUsers()
         {
             var users = await _userInterface.GetUsers();
-            if (!users.Status && users.StatusCode == 404)
+            if (!users.Status)
             {
-                return NotFound(new { status = 404, erros = users.Mensagem  });
+                return StatusCode(users.StatusCode, new { status = users.StatusCode, erros = users.Mensagem });
             }
 
             return Ok(users);
@@ -42,9 +42,9 @@ namespace BurguerMania.Controllers
         public async Task<ActionResult<ResponseModel<UsersModel>>> GetUser(int id)
         {
             var user = await _userInterface.GetUser(id);
-            if (!user.Status && user.StatusCode == 404)
+            if (!user.Status)
             {
-                return NotFound(new { status = 404, erros = user.Mensagem });
+                return StatusCode(user.StatusCode, new { status = user.StatusCode, erros = user.Mensagem });
             }
 
             return Ok(user);
@@ -55,10 +55,18 @@ namespace BurguerMania.Controllers
         [HttpPut("PutUsers/{id}")]
         public async Task<ActionResult<ResponseModel<UsersModel>>>  PutUsers(int id, UserRequest userRequest)
         {
-            var user = await _userInterface.PutUsers(id, userRequest);
-            if (!user.Status && user.StatusCode == 404)
+            if (!ModelState.IsValid)
             {
-                return NotFound(new { status = 404, erros = user.Mensagem });
+                // Caso o modelo não seja válido, retorna uma resposta com as mensagens de erro
+                var errorMessages = ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage).ToList();
+                return BadRequest(new { erros = errorMessages });
+            }
+
+            var user = await _userInterface.PutUsers(id, userRequest);
+            
+            if (!user.Status)
+            {
+                return StatusCode(user.StatusCode, new { status = user.StatusCode, erros = user.Mensagem });
             }
 
             return Ok(user);
@@ -70,7 +78,19 @@ namespace BurguerMania.Controllers
         [HttpPost("PostUsers")]
         public async Task<ActionResult<UsersModel>> PostUsers(UserRequest userRequest)
         {
+            if (!ModelState.IsValid)
+            {
+                // Caso o modelo não seja válido, retorna uma resposta com as mensagens de erro
+                var errorMessages = ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage).ToList();
+                return BadRequest(new { erros = errorMessages });
+            }
+            
             var user = await _userInterface.PostUsers(userRequest);
+            
+            if (!user.Status)
+            {
+                return StatusCode(user.StatusCode, new { status = user.StatusCode, erros = user.Mensagem });
+            }
             return Ok(user);
         }
 
@@ -79,9 +99,9 @@ namespace BurguerMania.Controllers
         public async Task<ActionResult<ResponseModel<UsersModel>>> DeleteUsers(int id)
         {
             var user = await _userInterface.DeleteUsers(id);
-            if (!user.Status && user.StatusCode == 404)
+            if (!user.Status)
             {
-                return NotFound(new { status = 404, erros = user.Mensagem });
+                return StatusCode(user.StatusCode, new { status = user.StatusCode, erros = user.Mensagem });
             }
 
             return Ok(user);
