@@ -17,13 +17,12 @@ using BurguerManiaAPI.Interfaces.Category;
 using BurguerManiaAPI.Interfaces.Order;
 using BurguerManiaAPI.Interfaces.OrderProduct;
 
-
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-builder.Services.AddControllers() 
+builder.Services.AddControllers()
     .ConfigureApiBehaviorOptions(options =>
-    {   // limita a resposta de error 400
+    {   // limita a resposta de erro 400
         options.InvalidModelStateResponseFactory = context =>
         {
             var errors = context.ModelState
@@ -43,6 +42,17 @@ builder.Services.AddControllers()
         };
     });
 
+// Add CORS policy
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowAll", policy =>
+    {
+        policy.AllowAnyOrigin() 
+              .AllowAnyMethod()  
+              .AllowAnyHeader(); 
+    });
+});
+
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddScoped<IUserInterface, UserService>();
@@ -52,17 +62,15 @@ builder.Services.AddScoped<ICategoryInterface, CategoryService>();
 builder.Services.AddScoped<IOrderInterface, OrderService>();
 builder.Services.AddScoped<IOrderProductInterface, OrderProductService>();
 
-
 // Configure MySQL connection string
 string? mySqlConnectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 
 // Register DbContext with MySQL
-builder.Services.AddDbContext<AppDbContext>(options => 
+builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseMySql(mySqlConnectionString, ServerVersion.AutoDetect(mySqlConnectionString)));
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
     app.UseDeveloperExceptionPage();
@@ -73,5 +81,8 @@ app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "API v1"));
 
 app.UseHttpsRedirection();
 app.UseAuthorization();
+
+app.UseCors("AllowAll");
+
 app.MapControllers();
 app.Run();

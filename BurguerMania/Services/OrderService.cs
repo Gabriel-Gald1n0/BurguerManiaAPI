@@ -27,6 +27,7 @@ namespace BurguerManiaAPI.Services.Order
                 var pedidos = await _context.Orders
                     .Select(o => new OrderResponse
                     {
+                        Id = o.Id,
                         StatusId = o.StatusId,
                         Status = o.Status != null ? o.Status.Name : "Status não encontrado",  
                         Value = o.Value
@@ -64,6 +65,7 @@ namespace BurguerManiaAPI.Services.Order
                     .Where(o => o.Id == id)
                     .Select(o => new OrderResponse
                     {
+                        Id = o.Id,
                         StatusId = o.StatusId,
                         Status = o.Status != null ? o.Status.Name : "Status não encontrado",  
                         Value = o.Value
@@ -185,6 +187,7 @@ namespace BurguerManiaAPI.Services.Order
 
                 var pedidoResponse = new OrderResponse
                 {
+                    Id = pedido.Id,
                     Status = pedido.Status != null ? pedido.Status.Name : "Status não encontrado",  
                     Value = pedido.Value
                 };

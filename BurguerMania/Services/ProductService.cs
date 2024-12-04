@@ -37,9 +37,10 @@ namespace BurguerManiaAPI.Services.Product
                         Id = x.Id,
                         Name = x.Name,
                         Price = x.Price,
+                        CategoryId = x.CategoryId,
                         CategoryName = x.Category != null ? x.Category.Name : "Sem categoria",
                         PathImage = x.PathImage,
-                        BaseDescription = x.BaseDescription,
+                        Description = x.Description,
                         FullDescription = x.FullDescription
 
                     }).ToListAsync();
@@ -70,9 +71,10 @@ namespace BurguerManiaAPI.Services.Product
                         Id = x.Id,
                         Name = x.Name,
                         Price = x.Price,
+                        CategoryId = x.CategoryId,
                         CategoryName = x.Category != null ? x.Category.Name : "Sem categoria",
                         PathImage = x.PathImage,
-                        BaseDescription = x.BaseDescription,
+                        Description = x.Description,
                         FullDescription = x.FullDescription
                     }).FirstOrDefaultAsync();
 
@@ -107,7 +109,7 @@ namespace BurguerManiaAPI.Services.Product
                 produto.Price = productRequest.Price;
                 produto.CategoryId = productRequest.CategoryId;
                 produto.PathImage = productRequest.PathImage;
-                produto.BaseDescription = productRequest.BaseDescription;
+                produto.Description = productRequest.Description;
                 produto.FullDescription = productRequest.FullDescription;
                 _context.Products.Add(produto);
                 await _context.SaveChangesAsync();
@@ -126,9 +128,10 @@ namespace BurguerManiaAPI.Services.Product
                     Id = produto.Id,
                     Name = produto.Name,
                     Price = produto.Price,
+                    CategoryId = produto.CategoryId,
                     CategoryName = produto.Category != null ? produto.Category.Name : "Sem categoria",
                     PathImage = produto.PathImage,
-                    BaseDescription = produto.BaseDescription,
+                    Description = produto.Description,
                     FullDescription = produto.FullDescription
                 };
 
@@ -172,7 +175,7 @@ namespace BurguerManiaAPI.Services.Product
 
                 produtoAtual.Name = productRequest.Name;
                 produtoAtual.Price = productRequest.Price;
-                produtoAtual.BaseDescription = productRequest.BaseDescription;
+                produtoAtual.Description = productRequest.Description;
                 produtoAtual.FullDescription = productRequest.FullDescription;
                 produtoAtual.CategoryId = productRequest.CategoryId;
                 produtoAtual.PathImage = productRequest.PathImage;
@@ -185,9 +188,10 @@ namespace BurguerManiaAPI.Services.Product
                     Id = produtoAtual.Id,
                     Name = produtoAtual.Name,
                     Price = produtoAtual.Price,
+                    CategoryId = produtoAtual.CategoryId,
                     CategoryName = produtoAtual.Category != null ? produtoAtual.Category.Name : "Sem categoria",
                     PathImage = produtoAtual.PathImage,
-                    BaseDescription = produtoAtual.BaseDescription,
+                    Description = produtoAtual.Description,
                     FullDescription = produtoAtual.FullDescription
                 };
 
@@ -233,9 +237,10 @@ namespace BurguerManiaAPI.Services.Product
                     Id = produto.Id,
                     Name = produto.Name,
                     Price = produto.Price,
+                    CategoryId = produto.CategoryId,
                     CategoryName = produto.Category != null ? produto.Category.Name : "Sem categoria",
                     PathImage = produto.PathImage,
-                    BaseDescription = produto.BaseDescription,
+                    Description = produto.Description,
                     FullDescription = produto.FullDescription
                 };
 

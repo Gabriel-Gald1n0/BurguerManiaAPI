@@ -27,6 +27,7 @@ namespace BurguerManiaAPI.Services.Category
                 var categories = await _context.Categories
                     .Select(c => new CategoryResponse
                     {
+                        Id = c.Id,
                         Name = c.Name,
                         Description = c.Description,
                         PathImage = c.PathImage
@@ -64,6 +65,7 @@ namespace BurguerManiaAPI.Services.Category
                     .Where(c => c.Id == id)
                     .Select(c => new CategoryResponse
                     {
+                        Id = c.Id,
                         Name = c.Name,
                         Description = c.Description,
                         PathImage = c.PathImage
@@ -109,6 +111,7 @@ namespace BurguerManiaAPI.Services.Category
 
                 resposta.Dados = new CategoryResponse
                 {
+                    Id = category.Id,
                     Name = category.Name,
                     Description = category.Description,
                     PathImage = category.PathImage
@@ -151,6 +154,7 @@ namespace BurguerManiaAPI.Services.Category
 
                 resposta.Dados = new CategoryResponse
                 {
+                    Id = category.Id,
                     Name = category.Name,
                     Description = category.Description,
                     PathImage = category.PathImage
@@ -190,6 +194,7 @@ namespace BurguerManiaAPI.Services.Category
 
                 resposta.Dados = new CategoryResponse
                 {
+                    Id = category.Id,
                     Name = category.Name,
                     Description = category.Description,
                     PathImage = category.PathImage

@@ -8239,11 +8239,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\CIC\\CEPEDI\\backend\\BurguerMania\\BurguerMania.csproj",
+      "projectUniqueName": "C:\\CIC\\CEPEDI\\backend\\BurguerManiaAPI\\BurguerMania\\BurguerMania.csproj",
       "projectName": "BurguerMania",
-      "projectPath": "C:\\CIC\\CEPEDI\\backend\\BurguerMania\\BurguerMania.csproj",
+      "projectPath": "C:\\CIC\\CEPEDI\\backend\\BurguerManiaAPI\\BurguerMania\\BurguerMania.csproj",
       "packagesPath": "C:\\Users\\User\\.nuget\\packages\\",
-      "outputPath": "C:\\CIC\\CEPEDI\\backend\\BurguerMania\\obj\\",
+      "outputPath": "C:\\CIC\\CEPEDI\\backend\\BurguerManiaAPI\\BurguerMania\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\User\\AppData\\Roaming\\NuGet\\NuGet.Config"

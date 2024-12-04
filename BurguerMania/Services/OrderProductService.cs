@@ -27,6 +27,7 @@ namespace BurguerManiaAPI.Services.OrderProduct
                 var orderProducts = await _context.OrdersProducts
                     .Select(op => new OrderProductResponse
                     {
+                        Id = op.Id,
                         OrderId = op.OrderId,
                         ProductId = op.ProductId
                     })
@@ -63,6 +64,7 @@ namespace BurguerManiaAPI.Services.OrderProduct
                     .Where(op => op.OrderId == id)
                     .Select(op => new OrderProductResponse
                     {
+                        Id = op.Id,
                         OrderId = op.OrderId,
                         ProductId = op.ProductId
                     })
@@ -106,6 +108,7 @@ namespace BurguerManiaAPI.Services.OrderProduct
 
                 resposta.Dados = new OrderProductResponse
                 {
+                    Id = orderProduct.Id,
                     OrderId = orderProduct.OrderId,
                     ProductId = orderProduct.ProductId
                 };
@@ -184,6 +187,7 @@ namespace BurguerManiaAPI.Services.OrderProduct
 
                 resposta.Dados = new OrderProductResponse
                 {
+                    Id = orderProduct.Id,
                     OrderId = orderProduct.OrderId,
                     ProductId = orderProduct.ProductId
                 };
