@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost:3307
--- Tempo de geração: 04/12/2024 às 02:41
+-- Tempo de geração: 04/12/2024 às 06:29
 -- Versão do servidor: 10.4.28-MariaDB
 -- Versão do PHP: 8.0.28
 
@@ -94,7 +94,7 @@ CREATE TABLE `products` (
   `Name` varchar(100) NOT NULL,
   `PathImage` longtext DEFAULT NULL,
   `Price` decimal(18,2) NOT NULL,
-  `BaseDescription` longtext DEFAULT NULL,
+  `Description` longtext DEFAULT NULL,
   `FullDescription` longtext DEFAULT NULL,
   `CategoryId` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -103,7 +103,7 @@ CREATE TABLE `products` (
 -- Despejando dados para a tabela `products`
 --
 
-INSERT INTO `products` (`Id`, `Name`, `PathImage`, `Price`, `BaseDescription`, `FullDescription`, `CategoryId`) VALUES
+INSERT INTO `products` (`Id`, `Name`, `PathImage`, `Price`, `Description`, `FullDescription`, `CategoryId`) VALUES
 (1, 'X-Alface-Premium', 'https://github.com/Gabriel-Gald1n0/BurguerManiaAPI/raw/main/Img/hamburguer.png', 99.99, 'Pão, hambúrguer, alface, tomate, queijo e maionese.', 'Um hambúrguer vegano suculento feito com uma base de grão-de-bico e quinoa, temperado com especiarias defumadas, cebola caramelizada e alho, garantindo uma textura rica e saborosa. Servido em um pão macio, ele vem acompanhado de fatias frescas de tomate, alface crocante, picles, abacate cremoso e uma generosa camada de maionese de ervas vegana. Finalizado com molho barbecue agridoce e uma pitada de pimenta-do-reino moída na hora, proporcionando uma combinação deliciosa de sabores e texturas em cada mordida.', 1),
 (3, 'X-Tomate', 'https://github.com/Gabriel-Gald1n0/BurguerManiaAPI/raw/main/Img/hamburguer.png', 35.50, 'Pão, hambúrguer, bacon, queijo e molho especial.', 'Um hambúrguer vegano suculento feito com uma base de grão-de-bico e quinoa, temperado com especiarias defumadas, cebola caramelizada e alho, garantindo uma textura rica e saborosa. Servido em um pão macio, ele vem acompanhado de fatias frescas de tomate, alface crocante, picles, abacate cremoso e uma generosa camada de maionese de ervas vegana. Finalizado com molho barbecue agridoce e uma pitada de pimenta-do-reino moída na hora, proporcionando uma combinação deliciosa de sabores e texturas em cada mordida.', 1),
 (4, 'X-Frutas', 'https://github.com/Gabriel-Gald1n0/BurguerManiaAPI/raw/main/Img/hamburguer.png', 25.50, 'Pão, hambúrguer e frutas cítricas.', 'Um hambúrguer vegano suculento feito com uma base de grão-de-bico e quinoa, temperado com especiarias defumadas, cebola caramelizada e alho, garantindo uma textura rica e saborosa. Servido em um pão macio, ele vem acompanhado de fatias frescas de maça, alface crocante, picles, abacate cremoso e uma generosa camada de maionese de ervas vegana. Finalizado com molho barbecue agridoce e uma pitada de pimenta-do-reino moída na hora, proporcionando uma combinação deliciosa de sabores e texturas em cada mordida.', 1),
@@ -204,7 +204,8 @@ INSERT INTO `__efmigrationshistory` (`MigrationId`, `ProductVersion`) VALUES
 ('20241203201409_InicialMigrate', '8.0.10'),
 ('20241203233652_SecondMigrate', '8.0.10'),
 ('20241203235029_removeDescription', '8.0.10'),
-('20241203235625_setPrice', '8.0.10');
+('20241203235625_setPrice', '8.0.10'),
+('20241204041728_configProduct', '8.0.10');
 
 --
 -- Índices para tabelas despejadas
