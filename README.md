@@ -1,4 +1,4 @@
-# **BurguerManiaAPI - Backend**
+# 🍔 **BurguerManiaAPI - Backend**
 
 O backend do projeto **BurguerMania** foi desenvolvido utilizando o **ASP.NET Core** e tem como objetivo fornecer as APIs necessárias para gerenciar os dados de pedidos, cardápio e categorias de produtos. Este projeto segue os princípios de boas práticas, incluindo separação de responsabilidades, uso de interfaces, e configurações baseadas em `appsettings.json`.
 
